@@ -132,7 +132,7 @@
 
       8. sudo systemctl restart nginx
 
-   5. gunicore config set up:
+   5. gunicore config set up( currenttly in Flask_Blog directory ):
 
       1. gunicorn -w 3 run:app (now you can visit your web site, and this is not enough cause once you close your server, everything gone)
 
