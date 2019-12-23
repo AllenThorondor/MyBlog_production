@@ -30,10 +30,12 @@ def create_app(config_class=Config):
     from flaskblog.posts.routes import posts
     from flaskblog.main.routes import main
     from flaskblog.errors.handlers import errors
+    from flaskblog.mem.routes import mem
 
     app.register_blueprint(users)
     app.register_blueprint(posts)
     app.register_blueprint(main)
     app.register_blueprint(errors)
+    app.register_blueprint(mem)
 
     return app

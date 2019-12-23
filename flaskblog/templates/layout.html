@@ -13,9 +13,9 @@
 
     <meta charset="utf-8">
     {% if title %}
-        <title>Leonard's Blog - {{ title }}</title>
+        <title>Leonard Blog - {{ title }}</title>
     {% else %}
-        <title>Leonard's Blog</title>
+        <title>Leonard Blog</title>
     {% endif %}
   </head>
   <body>
@@ -37,12 +37,12 @@
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
-              <a class="nav-item nav-link" href="{{ url_for('users.new_post') }}">发帖</a>
-              <a class="nav-item nav-link" href="{{ url_for('users.account') }}">账户信息</a>
-              <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">登出</a>
+              <a class="nav-item nav-link" href="{{ url_for('users.new_post') }}">New Post</a>
+              <a class="nav-item nav-link" href="{{ url_for('users.account') }}">Account</a>
+              <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a>
               {% else %}
-              <a class="nav-item nav-link" href="{{ url_for('users.login') }}">登入</a>
-              <a class="nav-item nav-link" href="{{ url_for('users.register') }}">注册</a>
+              <a class="nav-item nav-link" href="{{ url_for('users.login') }}">Login</a>
+              <a class="nav-item nav-link" href="{{ url_for('users.register') }}">Register</a>
               {% endif %}
             </div>
           </div>
@@ -68,13 +68,13 @@
         </div>
         <div class="col-md-4">
           <div class="content-section">
-            <h3>举重若轻（anti-gravity)</h3>
-            <p class='text-muted'>欢迎来到我的博客，这里属于狂奔的蜗牛们🐌.
+            <h3>狂奔的蜗牛</h3>
+            <p class='text-muted'>欢迎大家来到我的博客。
               <ul class="list-group">
-                <li class="list-group-item list-group-item-light">最近更新</li>
-                <li class="list-group-item list-group-item-light">公告</li>
-                <li class="list-group-item list-group-item-light">近期安排</li>
-                <li class="list-group-item list-group-item-light">先占个座</li>
+                <li class="list-group-item list-group-item-light">最近的更新计划</li>
+                <li class="list-group-item list-group-item-light">最近的公告</li>
+                <li class="list-group-item list-group-item-light">近期行程</li>
+                <li class="list-group-item list-group-item-light">其他</li>
               </ul>
             </p>
           </div>
