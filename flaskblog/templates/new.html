@@ -1,6 +1,73 @@
-{% extends "layout.html" %}
-{% block content %}
-    <h1>这个地方是我用来写picture square的， 用来分享照片</h1>
-    <p>我尽量在一个星期以内把它写出来</p>
-    <p>保质保量， 嗯！</p>
-{% endblock content %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>this is a test</title>
+    <style media="screen">
+      h1 {
+        color: purple;
+        font-size: 70px;
+        text-transform: uppercase;
+        border-top: 5px solid;
+
+      }
+
+      body {
+        background-color: #F69680;
+        color: #2E1263;
+        font-family: Arial;
+      }
+
+      img {
+        height: 500px;
+        border-radius: 50%;
+      }
+
+      #container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      button {
+        margin: 30px auto 0;
+        padding: 20px 25px;
+        background-color: #F69680;
+        text-align: center;
+        border: 1px solid #2E1263;
+        text-transform: uppercase;
+        text-decoration: none;
+        letter-spacing: 4px;
+        outline: none;
+      }
+
+      button:hover {
+        transition: 0.5s;
+        background-color: #2E1263;
+        color: #F69680;
+        text-decoration: underline;
+      }
+
+      p {
+        font-size: 20px;
+      }
+    </style>
+
+  </head>
+  <body>
+
+    <section id='container'>
+      <h1>This is my square</h1>
+
+      <img src="../static/profile_pics/default.jpg" alt="">
+      <div>
+        <button name="button">Get Next Photo</button>
+      </div>
+
+
+      <p>she currently has no name, Please help me name her</p>
+    </section>
+  </body>
+</html>

@@ -11,20 +11,26 @@
 3. Set hostname for machine:
 
    1. hostnamectl set-hostname flask-server
-   2. vi /etc/hosts
-   3. 47.106.21.181 flask-server
-   4. adduser Leonard
-   5. adduser Leonard sudo (add this person to sudo group )
-   6. exit (to login as Leonard, you have to exit first)
-   7. re-login as Leonard
 
-4. Set secretly based login
+   2. vi /etc/hosts
+
+      1. > 47.106.21.181 flask-server
+
+   3. adduser Leonard
+
+   4. adduser Leonard sudo (add this person to sudo group )
+
+   5. exit (to login as Leonard, you have to exit first)
+
+   6. re-login as Leonard
+
+4. Set secret key based login
 
    1. Pwd  to know where you are
 
    2. make ssh key based authentication instead of login by password
 
-   3. on server $: mkdir .ssh
+   3. on server (home directory ~)$: mkdir .ssh
 
       1. on local machine: ssh-keygen -b 4096
       2. copy the public key to server:    scp ~/.ssh/id_rsa.pub leonard@47.106.21.181:~/.ssh/authorized_keys
@@ -67,109 +73,104 @@
 2. On the server side:
 
    1. (Create a virtual env on the server first)
-
       1. sudo apt install python3-pip
       2. sudo apt install python3-venv (or use another command :  sudo apt-get install python3-venv)
       3. pip freeze > requirement.txt    (preparation to auto pip install packages that we need)
       4. pip install -r requirement.txt 
 
-   2. Environment variables (config file instead)
+   
 
-      1. sudo vi flaskblog/config.py 
-      2. export FLASK_APP=run.py
-      3. flask run --host=0.0.0.0
+## Part4: Nginx + Gunicore + supervisor
 
-   3. install nginx for web:
+1. Environment variables (config file instead)
 
-      1. sudo apt install nginx
-      2. pip install gunicorn
+   1. (to use config.py in the init procedure ) sudo vi flaskblog/config.py 
+   2. (to set a temperary environment variables in the venv and in the folder FlaskBlog ) export FLASK_APP=run.py
+   3. flask run --host=0.0.0.0
 
-   4. update config for nginx
+2. install nginx and gunicore for web:
 
-      1. gunicorn will handle the python code , and nginx will handle th static files
+   1. sudo apt install nginx
+   2. pip install gunicorn
 
-      2. first remove default file: (  sudo rm /etc/nginx/sites-enabled/default ) 
+3. update config for nginx
 
-      3. create new config : (  sudo vi /etc/nginx/sites-enabled/flaskblog  )
+   1. gunicorn will handle the python code , and nginx will handle th static files
 
-      4. server {
+   2. first remove default file: (  sudo rm /etc/nginx/sites-enabled/default ) 
 
-         ​    listen 80;
+   3. create new config : (  sudo vi /etc/nginx/sites-enabled/flaskblog  )
 
-         ​    server_name 111.229.109.128;
+   4. server {
 
-         
+      ​    listen 80;
 
-         ​    location /static {
+      ​    server_name 111.229.109.128;
 
-         ​        alias /home/leonard/Flask_Blog/flaskblog/static;
+      ​    location /static {
 
-         ​    }
+      ​        alias /home/leonard/Flask_Blog/flaskblog/static;
 
-         
+      ​    }
 
-         ​    location / {
+      ​    location / {
 
-         ​        proxy_pass http://localhost:8000;
+      ​        proxy_pass http://localhost:8000;
 
-         ​        include /etc/nginx/proxy_params;
+      ​        include /etc/nginx/proxy_params;
 
-         ​        proxy_redirect off;
+      ​        proxy_redirect off;
 
-         
+      ​    }
 
-         
+      }
 
-         ​    }
+   5. sudo ufw allow http/tcp
 
-         }
+   6. sudo ufw delete allow 5000
 
-      5. sudo ufw allow http/tcp
+   7. sudo ufw enable
 
-      6. sudo ufw delete allow 5000
+   8. sudo systemctl restart nginx
 
-      7. sudo ufw enable
+4. gunicore config set up( currenttly in Flask_Blog directory ):
 
-      8. sudo systemctl restart nginx
+   1. gunicorn -w 3 run:app (now you can visit your web site, and this is not enough cause once you close your server, everything gone)
 
-   5. gunicore config set up( currenttly in Flask_Blog directory ):
+   2. sudo apt install supervisor ( help you manager your web server )
 
-      1. gunicorn -w 3 run:app (now you can visit your web site, and this is not enough cause once you close your server, everything gone)
+   3. sudo vi /etc/supervisor/conf.d/flaskblog.conf
 
-      2. sudo apt install supervisor ( help you manager your web server )
+   4. [program:flaskblog]
 
-      3. sudo vi /etc/supervisor/conf.d/flaskblog.conf
+      directory=/home/leonard/Flask_Blog
 
-      4. [program:flaskblog]
+      command=/home/leonard/Flask_Blog/venv/bin/gunicorn -w 3 run:app
 
-         directory=/home/leonard/Flask_Blog
+      user=leonard
 
-         command=/home/leonard/Flask_Blog/venv/bin/gunicorn -w 3 run:app
+      autostart=true
 
-         user=leonard
+      autorestart=true
 
-         autostart=true
+      stopasgroup=true
 
-         autorestart=true
+      killasgroup=true
 
-         stopasgroup=true
+      stderr_logfile=/var/log/flaskblog/flaskblog.err.log
 
-         killasgroup=true
+      stdout_logfile=/var/log/flaskblog/flaskblog.out.log
 
-         stderr_logfile=/var/log/flaskblog/flaskblog.err.log
+   5. sudo mkdir -p /var/log/flaskblog
 
-         stdout_logfile=/var/log/flaskblog/flaskblog.out.log
+   6. sudo touch /var/log/flaskblog/flaskblog.out.log
 
-      5. sudo mkdir -p /var/log/flaskblog
+   7. sudo touch /var/log/flaskblog/flaskblog.err.log
 
-      6. sudo touch /var/log/flaskblog/flaskblog.out.log
+   8. sudo supervisorctl reload ( to restart the supervisor )
 
-      7. sudo touch /var/log/flaskblog/flaskblog.err.log
+5. to change the size limit for nginx for image files (2MB for default)
 
-      8. sudo supervisorctl reload ( to restart the supervisor )
-
-   6. to change the size limit for nginx for image files (2MB for default)
-
-      1. sudo vi /etc/nginx/nginx.conf
-      2. add 1 line above the token off ( client_max_body_size 5M; )
-      3. restart nginx ( sudo systemctl restart nginx )
+   1. sudo vi /etc/nginx/nginx.conf
+   2. add 1 line above the token off ( client_max_body_size 5M; )
+   3. restart nginx ( sudo systemctl restart nginx )
