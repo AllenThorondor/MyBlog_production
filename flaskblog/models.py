@@ -41,3 +41,10 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
+
+
+class Friend(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), nullable=False)
+    content = db.Column(db.Text, nullable=False, default='empty')
+    picture = db.Column(db.String(),nullable=False, default='default.jpg')

@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<style media="screen">
+  img {
+    height: 650px;
+  }
+
+  p {
+    margin: 5px;
+    font-size: 20px;
+    color: #;
+    border-bottom: 2px solid;
+  }
+</style>
+<div class="content-section">
+  <div class="media">
+      <div class="media-body">
+        <h2 class="account-heading">{{ friend.name }}</h2>
+        <p class="text-secondary">没错，这个帅哥就是{{ friend.name }}！</p>
+      </div>
+  </div>
+  <div>
+    <img src="../static/profile_pics/{{ friend.picture }}">
+    <p>{{ friend.content }}</p>
+  </div>
+</div>
+{% endblock content %}
